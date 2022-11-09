@@ -29,12 +29,52 @@ async function run() {
             res.send(result);
         });
 
-        //getting all reviews
-        app.get('/reviews', async (req, res) => {
-            const query = {};
+        //getting service wise reviews
+        app.get('/reviews/:id', async (req, res) => {
+            const id = req.params.id;
+            // console.log(id);
+            const query = { serviceId: id };
             const cursor = reviewsCollection.find(query);
             const reviews = await cursor.toArray();
             res.send(reviews);
+        });
+
+
+        //getting email wise reviews
+        app.get('/reviews', async (req, res) => {
+            const query = {
+                email: req.query.email
+            };
+            const cursor = reviewsCollection.find(query);
+            const reviews = await cursor.toArray();
+            res.send(reviews);
+        });
+
+        //getting a specific review
+        app.get('/update/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const review = await reviewsCollection.findOne(query);
+            res.send(review);
+        });
+
+        //updating a review
+        app.put('/update/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const prevReview = req.body;
+            // console.log(prevReview);
+
+            const option = { upsert: true };
+            const updatedReview = {
+                $set: {
+                    comment: prevReview.comment,
+                }
+            }
+
+            const result = await reviewsCollection.updateOne(query, updatedReview, option);
+            res.send(result);
+
         });
 
 
@@ -68,7 +108,18 @@ async function run() {
             res.send(result);
         });
 
+        //deletion
+        app.delete('/reviews/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log(id);
+            const query = { _id: ObjectId(id) };
+            const result = await reviewsCollection.deleteOne(query);
+            res.send(result);
+        });
+
         ///services end
+
+
 
 
 
