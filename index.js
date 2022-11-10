@@ -118,6 +118,17 @@ async function run() {
             res.send(services);
         });
 
+        //reading latest services
+        app.get('/latestservices', async (req, res) => {
+            const query = {};
+            const limit = parseInt(req.query.limit);
+            const avoid = parseInt(req.query.avoid);
+            console.log(avoid, limit);
+            const cursor = servicesCollection.find(query);
+            const services = await cursor.skip(avoid).limit(limit).toArray();
+            res.send(services);
+        });
+
 
         //reading individual service
         app.get('/services/:id', async (req, res) => {
