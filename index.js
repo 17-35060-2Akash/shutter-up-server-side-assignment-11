@@ -52,7 +52,8 @@ async function run() {
             const id = req.params.id;
             // console.log(id);
             const query = { serviceId: id };
-            const cursor = reviewsCollection.find(query);
+            // const cursor = reviewsCollection.find(query).sort({ _id: -1 });
+            const cursor = reviewsCollection.find(query).sort({ fullDateTime: -1 });
             const reviews = await cursor.toArray();
             res.send(reviews);
         });
@@ -71,7 +72,8 @@ async function run() {
             const query = {
                 email: req.query.email
             };
-            const cursor = reviewsCollection.find(query);
+            // const cursor = reviewsCollection.find(query).sort({ _id: -1 });
+            const cursor = reviewsCollection.find(query).sort({ fullDateTime: -1 });
             const reviews = await cursor.toArray();
             res.send(reviews);
         });
@@ -172,7 +174,7 @@ async function run() {
         app.get('/search', async (req, res) => {
             const searchString = req.query.string;
             console.log(searchString);
-            const query = { $text: { $search: 'corporate' } };
+            const query = { $text: { $search: searchString } };
             const cursor = servicesCollection.find(query);
             const products = await cursor.toArray();
             res.send(products);
