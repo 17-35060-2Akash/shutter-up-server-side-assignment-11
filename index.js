@@ -173,7 +173,7 @@ async function run() {
         ///search items
         app.get('/search', async (req, res) => {
             const searchString = req.query.string;
-            console.log(searchString);
+            // console.log(searchString);
             const query = { $text: { $search: searchString } };
             const cursor = servicesCollection.find(query);
             const products = await cursor.toArray();
