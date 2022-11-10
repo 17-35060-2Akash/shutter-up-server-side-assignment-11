@@ -168,11 +168,12 @@ async function run() {
 
 
 
-        //search items
+        ///search items
         app.get('/search', async (req, res) => {
             const searchString = req.query.string;
-            const query = { $text: { $search: searchString } };
-            const cursor = storeProductsCollection.find(query);
+            console.log(searchString);
+            const query = { $text: { $search: 'corporate' } };
+            const cursor = servicesCollection.find(query);
             const products = await cursor.toArray();
             res.send(products);
         });
